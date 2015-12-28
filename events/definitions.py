@@ -6,27 +6,27 @@ class A(Event):
     parents = []
 
     def do(gstate):
-        print 'A'
+        print('A')
 
     def prob(gstate):
-        return 0.7
+        return(0.7)
 
 class B(Event):
 
     parents = ['A']
 
     def do(gstate):
-        print 'B'
+        print('B')
 
     def prob(gstate):
-        return 0.9
+        return(0.9)
 
 class C(Event):
 
     parents = ['A']
 
     def do(gstate):
-        print 'C'
+        print('C')
 
     def prob(gstate):
-        return 0.8
+        return(0.8)

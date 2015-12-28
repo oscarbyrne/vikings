@@ -1,8 +1,11 @@
-from events import EventController
+import events
 from frames import TestFrame
 
 gstate = object()
-cont = EventController(gstate)
 
+def step():
+    for name in TestFrame.base_events:
+        event = events.fetch(name)
+        events.trigger(gstate, event)
 
-cont.execute_frame(TestFrame)
+step()

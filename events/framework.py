@@ -1,6 +1,20 @@
-def fetch_event(name):
-    import definitions
+__all__ = ['fetch', 'choose_from', 'trigger']
+from common import weighted_choice
+
+
+def fetch(name):
+    from . import definitions
     return getattr(definitions, name)
+
+def choose_from(gstate, events):
+    weights = [event.prob(gstate) for event in events]
+    return weighted_choice(zip(events, weights))
+
+def trigger(gstate, event):
+    event.do(gstate)
+    if event.children:
+        child = choose_from(gstate, event.children)
+        trigger(gstate, child)
 
 class EventMeta(type):
 
@@ -16,13 +30,12 @@ class EventMeta(type):
 
     def __init__(cls, clsname, bases, dct):
         super(EventMeta, cls).__init__(clsname, bases, dct)
-        cls.parents = tuple(fetch_event(name) for name in cls.parents)
+        cls.parents = tuple(fetch(name) for name in cls.parents)
         for parent in cls.parents:
             parent.children = parent.children + (cls,)
 
 
-class Event(object):
-    __metaclass__ = EventMeta
+class Event(object, metaclass=EventMeta):
 
     parents = []
 
